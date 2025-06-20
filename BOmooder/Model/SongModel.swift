@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+struct SongModel: Identifiable {
+    var id = UUID()
+    var songName: String
+    var artistImage: String
+    var artist: String
+    var genre: String
+    var fileURL: String
+}

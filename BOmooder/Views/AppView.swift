@@ -9,7 +9,36 @@ import SwiftUI
 
 struct AppView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView{
+            LibraryView()
+                .tabItem({
+                    Image(systemName:"music.note.list")
+                    Text("Music Library")
+                })
+            ExploringView()
+                .tabItem({
+                    Image(systemName:"smallcircle.circle")
+                    Text("Explore")
+                })
+            BOGraphView()
+                .tabItem({
+                    Image(systemName:"chart.line.uptrend.xyaxis.circle")
+                    Text("#bograph")
+                })
+            MusicRoomView()
+                .tabItem({
+                    Image(systemName:"dot.radiowaves.left.and.right")
+                    Text("Music Room")
+                })
+            ProfileView()
+                .tabItem({
+                    Image(systemName: "person.crop.circle")
+                    Text("Profile")
+                })
+            
+        }
+        .padding(.leading,10)
+        
     }
 }
 

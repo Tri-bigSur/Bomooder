@@ -18,7 +18,11 @@ struct AlbumDetailView: View {
     var albumImage: String
     var title: String
     let selectedAlbum: String
-   
+    func randomSong(){
+        let randomIndex = Int.random(in: 0..<listSong.count)
+        selectedSong = listSong[randomIndex]
+        indexSelected = randomIndex
+    }
     // MARK: - BODY
     var body: some View {
         
@@ -51,15 +55,26 @@ struct AlbumDetailView: View {
                             Text("Download")
                                 .font(.system(size: 15))
                         }
-                        ZStack {
-                            Capsule()
-                                .fill()
-                                .frame(width: 200,height: 38)
-                                .foregroundColor(Color.purple)
-                            Text("Play Random".uppercased())
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
+                        
+                        Button(action:{
+                            randomSong()
+                        }) {
+                            ZStack {
+                                Capsule()
+                                    .fill()
+                                    .frame(width: 200,height: 40)
+                                    .foregroundColor(Color.purple)
+                                Text("Play Random".uppercased())
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                
+                            }
                         }
+                        .fullScreenCover(item: $selectedSong){ songPlay in
+                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
+                        }
+                        
+                        
                         
                         VStack{
                                 Image(systemName: "heart")

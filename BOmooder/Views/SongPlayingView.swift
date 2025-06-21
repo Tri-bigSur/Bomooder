@@ -11,22 +11,63 @@ import AVFoundation
 struct SongPlayingView: View {
     // MARK: - PROPERTY
     @Environment(\.dismiss) var dismiss
+    
     let song: SongModel
     let playList: [SongModel]
+    let rotationSpeedDegreesPerSecond: Double = 36.0
     @Binding var index: Int
     @StateObject var audioPlayer = AudioPlayer()
     @State private var sliderValue: Double = 0
     @State private var isDragging = false
     @State private var isPlaying: Bool = false
     @State private var currentTime: TimeInterval = 0
-    @State private var seekTask: DispatchWorkItem?
-    @State private var isChangeSong: Bool = false
+    @State private var rotationAngle: Double = 0
+    @State private var timer: Timer?
+    
+    func previousSong(){
+        if index > 0 {
+            index -= 1
+            isPlaying = true
+            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
+        }else{
+            index = 0
+        }
+    }
+    func nextSong(){
+        if index + 1 < playList.count  {
+            index += 1
+            isPlaying = true
+            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
+            print("index: \(index)")
+        }else{
+            index = 0
+            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
+        }
+    }
+    // Start Rotation
+    private func startRotation(){
+        timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true){ _ in
+            withAnimation(.linear(duration: 0.1)){
+                rotationAngle += 0.36
+            }
+            
+        }
+       
+        
+    }
+    // Stop Rotation
+    private func stopRotation(){
+        timer?.invalidate()
+        timer = nil
+    }
     // MARK: - BODY
     var body: some View {
         VStack {
             HStack(alignment:.center){
                 Button(action:{
-                    dismiss()
+                    withAnimation{
+                        dismiss()
+                    }
                 }){
                     Image(systemName: "chevron.down")
                         .font(.system(size: 25))
@@ -51,8 +92,17 @@ struct SongPlayingView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: 200,height: 200)
+                .rotationEffect(.degrees(rotationAngle))
                 .mask(Circle())
                 .padding(.top,20)
+                .onChange(of: isPlaying){ newIsPlaying in
+                    if newIsPlaying{
+                        startRotation()
+                    }else{
+                        stopRotation()
+                    }
+                     
+                }
             VStack {
                 HStack(spacing:16){
                     Image(systemName: "arrowshape.turn.up.right")
@@ -91,12 +141,7 @@ struct SongPlayingView: View {
                     Spacer()
                     //: BACK SONG
                     Button(action:{
-                        if index > 0 {
-                            index -= 1
-                            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
-                        }else{
-                            index = 0
-                        }
+                        previousSong()
                     }) {
                         Image(systemName: "arrowtriangle.backward")
                             .font(.system(size: 24))
@@ -122,15 +167,7 @@ struct SongPlayingView: View {
                     }
                     //: NEXT SONG
                         Button(action:{
-                            isChangeSong.toggle()
-                            if index + 1 < playList.count  {
-                                index += 1
-                                audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
-                                print("index: \(index)")
-                            }else{
-                                index = 0
-                                audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
-                            }
+                           nextSong()
                             
                         }) {
                             Image(systemName: "arrowtriangle.forward")
@@ -154,6 +191,11 @@ struct SongPlayingView: View {
             
             
         }//: VSTACK
+        
+        .onAppear{
+//            isPlaying = true
+//            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
+        }
         .padding(.horizontal,10)
             
         
@@ -165,6 +207,6 @@ struct SongPlayingView: View {
 }
 
 #Preview {
-    SongPlayingView(song: SongModel(songName: "Xin Một Lần Đau", artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6", fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Xin Một Lần Đau.mp3"), playList: [SongModel(songName: "Huynh Và Đệ", artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7", fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Nơi nào tình yêu là mãi mãi .mp3"),SongModel(songName: "Nơi Nào Tình Yêu Là Mãi Mãi",artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6",fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Nơi nào tình yêu là mãi mãi.mp3")], index: .constant(1))
+    SongPlayingView(song: SongModel(songName: "Xin Một Lần Đau", artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6", fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Xin Một Lần Đau.mp3"), playList: [SongModel(songName: "Huynh Và Đệ", artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7", fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Nơi nào tình yêu là mãi mãi .mp3"),SongModel(songName: "Nơi Nào Tình Yêu Là Mãi Mãi",artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6",fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Nơi nào tình yêu là mãi mãi .mp3")], index: .constant(1))
         
 }

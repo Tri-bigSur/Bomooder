@@ -7,7 +7,7 @@
 
 import Foundation
 
-let albumData = [AlbumCardViewModel(albumImage: "SongImage", albumTitle: "Trọn Đời Bên Em 6"),AlbumCardViewModel(albumImage: "huynh-de-lyhai", albumTitle: "Trọn Đời Bên Em 7"),AlbumCardViewModel(albumImage: "bloody-marry", albumTitle: "Electropop")]
+let albumData = [AlbumCardViewModel(albumImage: "SongImage", albumTitle: "Trọn Đời Bên Em 6"),AlbumCardViewModel(albumImage: "huynh-de-lyhai", albumTitle: "Trọn Đời Bên Em 7"),AlbumCardViewModel(albumImage: "electropopGenre", albumTitle: "Electropop")]
 let songData = [
     SongModel(songName: "Một Mình Đi Về",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Một Mình Đi Về.mp3"),
     SongModel(songName: "Huynh Và Đệ",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Huynh Và Đệ .mp3"),

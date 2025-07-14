@@ -10,8 +10,9 @@ import SwiftUI
 struct AlbumDetailView: View {
     // MARK: - PROPERTIES
     @State private var indexSelected: Int = 0
-    @State private var selectedSong: SongModel?
     @State private var isPresentedSongView: Bool = false
+    @Binding var selectedSong: SongModel?
+    @Binding var isPlaying: Bool
     var listSong: [SongModel]{
         return songData.filter{$0.genre == selectedAlbum}
     }
@@ -70,9 +71,9 @@ struct AlbumDetailView: View {
                                 
                             }
                         }
-                        .fullScreenCover(item: $selectedSong){ songPlay in
-                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
-                        }
+//                        .fullScreenCover(item: $selectedSong){ songPlay in
+//                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
+//                        }
                         
                         
                         
@@ -99,15 +100,18 @@ struct AlbumDetailView: View {
                             .onTapGesture{
                                 self.indexSelected = index
                                 selectedSong = song
-                                isPresentedSongView = true
+                                isPlaying = true
+                                
+                                
+//                                isPresentedSongView = true
                                 
                                 
                             }
                                 }
-                        .fullScreenCover(item:$selectedSong){songPlay in
-                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
-                            
-                        }
+//                        .fullScreenCover(item:$selectedSong){songPlay in
+//                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
+//                            
+//                        }
                                 
                             }
                    
@@ -127,5 +131,5 @@ struct AlbumDetailView: View {
 
 
 #Preview {
-    AlbumDetailView(albumImage: "huynh-de-lyhai", title: "Trọn Đời Bên Em 7", selectedAlbum: "Trọn Đời Bên Em 7")
+    AlbumDetailView(selectedSong: .constant(SongModel(songName: "Một Mình Đi Về",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Một Mình Đi Về.mp3")), isPlaying: .constant(false), albumImage: "huynh-de-lyhai", title: "Trọn Đời Bên Em 7", selectedAlbum: "Trọn Đời Bên Em 7")
 }

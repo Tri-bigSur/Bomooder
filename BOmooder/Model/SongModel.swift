@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SongModel: Identifiable {
+struct SongModel: Identifiable,Equatable {
     var id = UUID()
     var songName: String
     var artistImage: String

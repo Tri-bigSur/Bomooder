@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+
+struct PlayListCard {
+    var playListImage: String
+    var playListName: String
+    var playListSong: [SongModel]
+    var playListSingers: String
+    
+}

@@ -11,7 +11,13 @@ struct TinyAlbumCardView: View {
     // MARK: - PROPERTIES
     var imageSinger: String
     var songName: String
-
+    var playList: [SongModel]
+    @Binding var selectedSong: SongModel?
+    func randomSong(){
+        let randomIndex = Int.random(in: 0..<playList.count)
+        selectedSong = playList[randomIndex]
+       
+    }
     // MARK: - BODY
     var body: some View {
         VStack(alignment:.leading,spacing: 4) {
@@ -22,7 +28,7 @@ struct TinyAlbumCardView: View {
                 .cornerRadius(12)
                 .overlay(
                     Button(action:{
-                        print("Playing Song ")
+                        randomSong()
                     }){
                         Image(systemName: "play.circle.fill")
                             .padding(.bottom,10)
@@ -52,5 +58,5 @@ struct TinyAlbumCardView: View {
 }
 
 #Preview {
-    TinyAlbumCardView(imageSinger: "SongImage", songName: "Trọn Đời Bên Em 6")
+    TinyAlbumCardView(imageSinger: "SongImage", songName: "Trọn Đời Bên Em 6",playList: [],selectedSong: .constant(SongModel(songName: "Hãy Một Lần Yêu",artistImage: "SongImage" ,artist:"Lý Hải ", genre: "Trọn Đời Bên Em 6",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Hãy Một Lần Yêu - Lý Hải.mp3")))
 }

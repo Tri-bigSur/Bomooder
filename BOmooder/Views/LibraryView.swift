@@ -55,7 +55,7 @@ struct LibraryView: View {
                         HStack(spacing:16){
                             ForEach(albumData,id:\.albumTitle){ item in
                                 NavigationLink(destination: AlbumDetailView(playList: $playList, selectedSong: $selectedSong,isPlaying: $isPlaying,albumInfo:item)){
-                                    TinyAlbumCardView(imageSinger: item.albumImage, songName: item.albumTitle)
+                                    TinyAlbumCardView(imageSinger: item.albumImage, songName: item.albumTitle,playList: item.albumSong,selectedSong: $selectedSong)
                                 }
                                 .foregroundColor(Color.white)
                                 

@@ -10,4 +10,5 @@ import SwiftUI
 struct AlbumCardViewModel{
     var albumImage: String
     var albumTitle: String
+    var albumSong: [SongModel]
 }

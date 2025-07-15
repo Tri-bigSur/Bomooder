@@ -11,8 +11,13 @@ struct PlayListDetailView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var audioPlayer = AudioPlayer()
     @Binding var selectedSong: SongModel?
-    
+    @Binding var playlist: [SongModel]
     var playListInfo: PlayListCard
+    func randomSong(){
+        let randomIndex = Int.random(in: 0..<playListInfo.playListSong.count)
+        selectedSong = playListInfo.playListSong[randomIndex]
+       
+    }
     var body: some View {
         ScrollView(.vertical,showsIndicators: false) {
             VStack {
@@ -52,16 +57,18 @@ struct PlayListDetailView: View {
                     Button(action:{
                         
                     }) {
-                        ZStack {
-                            Capsule()
-                                .fill()
-                                .frame(width: 200,height: 40)
-                                .foregroundColor(Color.purple)
-                            Text("Play Random".uppercased())
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            
-                        }
+                        Button(action: {randomSong()},label:{
+                            ZStack {
+                                Capsule()
+                                    .fill()
+                                    .frame(width: 200,height: 40)
+                                    .foregroundColor(Color.purple)
+                                Text("Play Random".uppercased())
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                
+                            }
+                        } )
                     }
 //                        .fullScreenCover(item: $selectedSong){ songPlay in
 //                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
@@ -89,7 +96,11 @@ struct PlayListDetailView: View {
                         item in
                         SongElementView(imageSong: item.artistImage, songName: item.songName, artistName: item.artist)
                             .onTapGesture {
+                                if let index = playListInfo.playListSong.firstIndex(of: item){
+                                    print(index)
+                                }
                                 selectedSong = item
+                                playlist = playListInfo.playListSong
                                 
                             }
                     }
@@ -130,5 +141,5 @@ struct PlayListDetailView: View {
 
 
 #Preview {
-    PlayListDetailView(selectedSong: .constant(SongModel(songName: "LK Nhẫn Cưới", artistImage: "backdiamondring", artist: "Mạnh Quỳnh, Phi Nhung, Như Quỳnh", genre:"Nhạc Vàng", fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/PBN 62 ｜ Như Quỳnh, Phi Nhung, Mạnh Quỳnh - LK Nhẫn Cưới.mp3")),playListInfo: PlayListCard(playListImage: "asia-symbols", playListName: "Nhạc Vàng VNCH", playListSong: [SongModel(songName: "LK Nhẫn Cưới", artistImage: "backdiamondring", artist: "Mạnh Quỳnh, Phi Nhung, Như Quỳnh", genre:"Nhạc Vàng", fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/PBN 62 ｜ Như Quỳnh, Phi Nhung, Mạnh Quỳnh - LK Nhẫn Cưới.mp3")], playListSingers: ""))
+    PlayListDetailView(selectedSong: .constant(SongModel(songName: "LK Nhẫn Cưới", artistImage: "backdiamondring", artist: "Mạnh Quỳnh, Phi Nhung, Như Quỳnh", genre:"Nhạc Vàng", fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/PBN 62 ｜ Như Quỳnh, Phi Nhung, Mạnh Quỳnh - LK Nhẫn Cưới.mp3")),playlist: .constant([SongModel(songName: " LK Nhẫn Cưới", artistImage: "backdiamondring", artist: "Mạnh Quỳnh,Phi Nhung,Như Quỳnh", genre: "Nhạc Vàng", fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/PBN 62 ｜ Như Quỳnh, Phi Nhung, Mạnh Quỳnh - LK Nhẫn Cưới.mp3"),SongModel(songName: "LK Rước Tình Về Với Quê Hương", artistImage: "ruoctinhveque", artist: "Thái Châu, Hoàng Lan, Thế Sơn ", genre: "Nhạc Vàng", fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/ LK Rước Tình Về Với Quê Hương.mp3")]), playListInfo: PlayListCard(playListImage: "asia-symbols", playListName: "Nhạc Vàng VNCH", playListSong: [SongModel(songName: "LK Nhẫn Cưới", artistImage: "backdiamondring", artist: "Mạnh Quỳnh, Phi Nhung, Như Quỳnh", genre:"Nhạc Vàng", fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/PBN 62 ｜ Như Quỳnh, Phi Nhung, Mạnh Quỳnh - LK Nhẫn Cưới.mp3")], playListSingers: ""))
 }

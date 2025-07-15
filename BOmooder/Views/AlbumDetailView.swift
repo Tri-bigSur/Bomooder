@@ -11,19 +11,16 @@ struct AlbumDetailView: View {
     // MARK: - PROPERTIES
     @State private var indexSelected: Int = 0
     @State private var isPresentedSongView: Bool = false
+    @Binding var playList: [SongModel]
     @Binding var selectedSong: SongModel?
     @Binding var isPlaying: Bool
-    var listSong: [SongModel]{
-        return songData.filter{$0.genre == selectedAlbum}
-    }
-    var albumImage: String
-    var title: String
-    let selectedAlbum: String
+    var albumInfo: AlbumCardViewModel
+   
     func randomSong(){
-        let randomIndex = Int.random(in: 0..<listSong.count)
-        selectedSong = listSong[randomIndex]
-        indexSelected = randomIndex
-    }
+        let randomIndex = Int.random(in: 0..<albumInfo.albumSong.count)
+    selectedSong = albumInfo.albumSong[randomIndex]
+   
+}
     // MARK: - BODY
     var body: some View {
         
@@ -31,7 +28,7 @@ struct AlbumDetailView: View {
                 VStack {
                     
                     ZStack{
-                        Image(albumImage)
+                        Image(albumInfo.albumImage)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 220,height: 220)
@@ -39,7 +36,7 @@ struct AlbumDetailView: View {
                         
                     }
                     VStack(spacing:8) {
-                        Text(title)
+                        Text(albumInfo.albumTitle)
                             .font(.title)
                             .fontWeight(.bold)
                         Text("Lý Hải")
@@ -71,9 +68,7 @@ struct AlbumDetailView: View {
                                 
                             }
                         }
-//                        .fullScreenCover(item: $selectedSong){ songPlay in
-//                            SongPlayingView(song: songPlay, playList: listSong, index: $indexSelected)
-//                        }
+
                         
                         
                         
@@ -90,7 +85,7 @@ struct AlbumDetailView: View {
                     
                     Spacer(minLength: 30)
                     VStack{
-                        ForEach(listSong.enumerated().map{($0,$1)},id:\.1.songName){index,song in
+                        ForEach(albumInfo.albumSong.enumerated().map{($0,$1)},id:\.1.songName){index,song in
                             HStack(alignment:.top){
                                     Text("\(index + 1)")
                                 
@@ -100,10 +95,11 @@ struct AlbumDetailView: View {
                             .onTapGesture{
                                 self.indexSelected = index
                                 selectedSong = song
+                                playList = albumInfo.albumSong
                                 isPlaying = true
                                 
                                 
-//                                isPresentedSongView = true
+
                                 
                                 
                             }
@@ -131,5 +127,7 @@ struct AlbumDetailView: View {
 
 
 #Preview {
-    AlbumDetailView(selectedSong: .constant(SongModel(songName: "Một Mình Đi Về",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Một Mình Đi Về.mp3")), isPlaying: .constant(false), albumImage: "huynh-de-lyhai", title: "Trọn Đời Bên Em 7", selectedAlbum: "Trọn Đời Bên Em 7")
+    AlbumDetailView(playList: .constant([]), selectedSong: .constant(SongModel(songName: "Một Mình Đi Về",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Một Mình Đi Về.mp3")), isPlaying: .constant(false), albumInfo:AlbumCardViewModel(albumImage: "SongImage", albumTitle: "Trọn Đời Bên Em 6", albumSong: [SongModel(songName: "Hãy Một Lần Yêu",artistImage: "SongImage" ,artist:"Lý Hải ", genre: "Trọn Đời Bên Em 6",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Hãy Một Lần Yêu - Lý Hải.mp3"),
+                                                                                                                                                                                                                                                                                                                                                                                                    SongModel(songName: "Nơi Nào Tình Yêu Là Mãi Mãi",artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Nơi nào tình yêu là mãi mãi .mp3"),
+                                                                                                                                                                                                                                                                                                                                                                                                    SongModel(songName: "Xin Một Lần Đau",artistImage: "SongImage",artist: "Lý Hải", genre: "Trọn Đời Bên Em 6",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Xin Một Lần Đau.mp3")]) )
 }

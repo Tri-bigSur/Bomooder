@@ -14,11 +14,12 @@ struct SongPlayingView: View {
     @Binding var currentSong: SongModel?
     @Binding var expand: Bool
     @Binding  var isPlaying: Bool
-    
+    @Binding var playList: [SongModel]
+    @Binding var index: Int
     var safeArea = UIApplication.shared.windows.first?.safeAreaInsets
-//    let playList: [SongModel]
+    
     let rotationSpeedDegreesPerSecond: Double = 36.0
-//    @Binding var index: Int
+    
     
     @StateObject var audioPlayer = AudioPlayer()
     @State private var sliderValue: Double = 0
@@ -28,26 +29,28 @@ struct SongPlayingView: View {
     @State private var rotationAngle: Double = 0
     @State private var timer: Timer?
     
-//    func previousSong(){
-//        if index > 0 {
-//            index -= 1
-//            isPlaying = true
+    func previousSong(){
+        if index > 0 {
+            index -= 1
+            isPlaying = true
+            currentSong = playList[index]
 //            audioPlayer.playSong(at: URL(fileURLWithPath:  playList[index].fileURL))
-//        }else{
-//            index = 0
-//        }
-//    }
-//    func nextSong(){
-//        if index + 1 < playList.count  {
-//            index += 1
-//            isPlaying = true
-//            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
+        }else{
+            index = 0
+        }
+    }
+    func nextSong(){
+        if index + 1 < playList.count  {
+            index += 1
+            isPlaying = true
+            currentSong = playList[index]
 //            print("index: \(index)")
-//        }else{
-//            index = 0
+        }else{
+            index = 0
+            currentSong = playList[index]
 //            audioPlayer.playSong(at: URL(fileURLWithPath: playList[index].fileURL))
-//        }
-//    }
+        }
+    }
     // Start Rotation
     private func startRotation(){
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true){ _ in
@@ -105,7 +108,8 @@ struct SongPlayingView: View {
                             .rotationEffect(.degrees(rotationAngle))
                             .mask(Circle())
                             .padding(.top,20)
-                            .onChange(of: isPlaying){ newIsPlaying in
+
+                            .onChange(of: isPlaying){oldValue, newIsPlaying in
                                 if newIsPlaying{
                                     startRotation()
                                 }else{
@@ -151,7 +155,7 @@ struct SongPlayingView: View {
                                 Spacer()
                                 //: BACK SONG
                                 Button(action:{
-                                    //                            previousSong()
+                                    previousSong()
                                 }) {
                                     Image(systemName: "arrowtriangle.backward")
                                         .font(.system(size: 24))
@@ -177,7 +181,7 @@ struct SongPlayingView: View {
                                 }
                                 //: NEXT SONG
                                 Button(action:{
-                                    //                            nextSong()
+                                    nextSong()
                                     
                                 }) {
                                     Image(systemName: "arrowtriangle.forward")
@@ -220,9 +224,11 @@ struct SongPlayingView: View {
                         if let song = currentSong{
                             Image(song.artistImage)
                                 .resizable()
+                                .scaledToFill()
                                 .frame(width: 50, height: 50)
                                 .mask(Circle())
                                 .padding(.leading,5)
+                                .rotationEffect(.degrees(rotationAngle))
                             
                             VStack(alignment:.leading){
                                 Text(song.songName)
@@ -258,9 +264,18 @@ struct SongPlayingView: View {
                                     .font(.system(size: 25))
                             }
                             
-                            Image(systemName: "play.fill")
-                                .font(.system(size: 25))
-                                .padding(.trailing,5)
+                            Button(action:{
+                               nextSong()
+                            }){
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 25))
+                                    .padding(.trailing,5)
+                                    .overlay(VStack{
+                                        Capsule()
+                                            .frame(width: 2, height: 20)
+                                    },alignment: .trailing)
+                            }
+                            
                         }
 
                 }//: Minimized Player
@@ -296,14 +311,15 @@ struct SongPlayingView: View {
             }
             
         }
-        
-    
+        .onAppear{
+            startRotation()
+        }
     }
         
        
 }
 
 #Preview {
-    SongPlayingView(currentSong: .constant(SongModel(songName: "Xin Một Lần Đau", artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6", fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Xin Một Lần Đau.mp3")), expand: .constant(true), isPlaying: .constant(false))
+    SongPlayingView(currentSong: .constant(SongModel(songName: "Xin Một Lần Đau", artistImage: "SongImage", artist: "Lý Hải", genre: "Trọn Đời Bên Em 6", fileURL: "/Users/warbo/Project/ Warbo's Project/BOmooder/BOmooder/BOmooder/SongFile/Xin Một Lần Đau.mp3")), expand: .constant(true), isPlaying: .constant(false),playList: .constant([]), index: .constant(0))
         
 }

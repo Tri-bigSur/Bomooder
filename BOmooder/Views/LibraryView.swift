@@ -22,6 +22,7 @@ struct LibraryView: View {
     
     @Binding var selectedSong: SongModel?
     @Binding var isPlaying: Bool
+    @Binding var playList: [SongModel]
     // MARK: - BODY
     var body: some View {
         NavigationView{
@@ -53,7 +54,7 @@ struct LibraryView: View {
                     VStack {
                         HStack(spacing:16){
                             ForEach(albumData,id:\.albumTitle){ item in
-                                NavigationLink(destination: AlbumDetailView(selectedSong: $selectedSong,isPlaying: $isPlaying,albumImage: item.albumImage, title: item.albumTitle, selectedAlbum: item.albumTitle)){
+                                NavigationLink(destination: AlbumDetailView(playList: $playList, selectedSong: $selectedSong,isPlaying: $isPlaying,albumInfo:item)){
                                     TinyAlbumCardView(imageSinger: item.albumImage, songName: item.albumTitle)
                                 }
                                 .foregroundColor(Color.white)
@@ -112,7 +113,7 @@ struct LibraryView: View {
                 // CONTENT OF SELECTED TAB
                 Group {
                     if selectedTab == .playList {
-                        PlayListView(selectedSong: $selectedSong)
+                        PlayListView(selectedSong: $selectedSong, playList: $playList)
                     }else{
                         AlbumTab()
                     }
@@ -139,7 +140,9 @@ struct LibraryView: View {
         }
 
 struct PlayListView: View {
+    
     @Binding var selectedSong: SongModel?
+    @Binding var playList: [SongModel]
     var body: some View {
         VStack(alignment: .leading,spacing: 16){
             HStack{
@@ -164,7 +167,8 @@ struct PlayListView: View {
             }
             ForEach(playListData,id:\.playListName){
                 item in
-                NavigationLink(destination: PlayListDetailView(selectedSong: $selectedSong, playListInfo: item)){
+                
+                NavigationLink(destination: PlayListDetailView(selectedSong: $selectedSong, playlist: $playList, playListInfo: item)){
                     PlayListItemView(playListName: item.playListName, artistsName: item.playListSingers, imagePlayList: item.playListImage)
                 }
                 .foregroundColor(Color.white)
@@ -197,5 +201,5 @@ struct AlbumTab: View{
 
 
 #Preview {
-    LibraryView(selectedSong: .constant(SongModel(songName: "Một Mình Đi Về",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Một Mình Đi Về.mp3")), isPlaying: .constant(false))
+    LibraryView(selectedSong: .constant(SongModel(songName: "Một Mình Đi Về",artistImage: "huynh-de-lyhai", artist: "Lý Hải", genre: "Trọn Đời Bên Em 7",fileURL: "/Users/warbo/Project/ Warbo's Project/Bomooder/BOmooder/SongFile/Một Mình Đi Về.mp3")), isPlaying: .constant(false), playList: .constant([]))
 }
